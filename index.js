@@ -5,41 +5,43 @@ const bot = new TelegramApi(token, { polling: true })
 const kb = require('./keyboard-button')
 const keyboard = require('./keyboard')
 
-bot.setMyCommands([
-	{ command: '/start', description: 'Початкове привітання' },
-	{ command: '/info', description: 'Інформація про користувача' },
-])
+const start = async () => {
+	bot.setMyCommands([
+		{ command: '/start', description: 'Початкове привітання' },
+		{ command: '/info', description: 'Інформація про користувача' },
+	])
 
-bot.on('message', async msg => {
-	const chatId = msg.chat.id
-	const text = msg.text
+	bot.on('message', async msg => {
+		const chatId = msg.chat.id
+		const text = msg.text
 
-	if (text === '/start') {
-		await bot.sendSticker(
-			chatId,
-			'https://media.stickerswiki.app/full_stitch/743914.512.webp'
-		)
-		await bot.sendMessage(chatId, `Вітаю, ${msg.from.first_name}`, {
-			reply_markup: {
-				keyboard: keyboard.home,
-			},
-		})
-		return
-	}
-
-	if (text === '/info') {
-		await bot.sendMessage(chatId, `Ваш юзер нейм @${msg.from.username}`)
-		return
-	}
-
-	switch (text) {
-		case kb.home.mkl:
-			await bot.sendMessage(chatId, 'Оберіть один із пунктів', {
-				reply_markup: { keyboard: keyboard.mk },
+		if (text === '/start') {
+			await bot.sendSticker(
+				chatId,
+				'https://media.stickerswiki.app/full_stitch/743914.512.webp'
+			)
+			return bot.sendMessage(chatId, `Вітаю, ${msg.from.first_name}`, {
+				reply_markup: {
+					keyboard: keyboard.home,
+				},
 			})
-			break
-		default:
-			await bot.sendMessage(chatId, 'Я тебе не розумію, спробуй ще раз!)')
-			break
-	}
-})
+		}
+
+		if (text === '/info') {
+			return bot.sendMessage(chatId, `Ваш юзер нейм @${msg.from.username}`)
+		}
+
+		switch (text) {
+			case kb.home.mkl:
+				await bot.sendMessage(chatId, 'Оберіть один із пунктів', {
+					reply_markup: { keyboard: keyboard.mk },
+				})
+				break
+			default:
+				await bot.sendMessage(chatId, 'Я тебе не розумію, спробуй ще раз!)')
+				break
+		}
+	})
+}
+
+start()
