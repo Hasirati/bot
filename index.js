@@ -10,36 +10,36 @@ bot.setMyCommands([
 	{ command: '/info', description: 'Інформація про користувача' },
 ])
 
-const start = async () => {
-	bot.on('message', async msg => {
-		const chatId = msg.chat.id
-
-		if (text === '/start') {
-			await bot.sendSticker(
-				chatId,
-				'https://media.stickerswiki.app/full_stitch/743914.512.webp'
-			)
-			return bot.sendMessage(chatId, `Вітаю, ${msg.from.first_name}`, {
-				reply_markup: {
-					keyboard: keyboard.home,
-				},
-			})
-		}
-		if (text === '/info') {
-			return bot.sendMessage(chatId, `Ваш юзер нейм @${msg.from.username}`)
-		}
-		return bot.sendMessage(chatId, 'Я тебе не розумію, спробуй ще раз!)')
-	})
-}
-
-start()
-
 bot.on('message', async msg => {
 	const chatId = msg.chat.id
-	switch (msg.text) {
+	const text = msg.text
+
+	if (text === '/start') {
+		await bot.sendSticker(
+			chatId,
+			'https://media.stickerswiki.app/full_stitch/743914.512.webp'
+		)
+		await bot.sendMessage(chatId, `Вітаю, ${msg.from.first_name}`, {
+			reply_markup: {
+				keyboard: keyboard.home,
+			},
+		})
+		return
+	}
+
+	if (text === '/info') {
+		await bot.sendMessage(chatId, `Ваш юзер нейм @${msg.from.username}`)
+		return
+	}
+
+	switch (text) {
 		case kb.home.mkl:
 			await bot.sendMessage(chatId, 'Оберіть один із пунктів', {
 				reply_markup: { keyboard: keyboard.mk },
 			})
+			break
+		default:
+			await bot.sendMessage(chatId, 'Я тебе не розумію, спробуй ще раз!)')
+			break
 	}
 })
